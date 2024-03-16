@@ -2,26 +2,31 @@ function solve(s) {
     let stack = []
     let sign = 1
     let res = ''
-  
+
     for (let c of s) {
-      switch (c) {
+    switch (c) {
         case '(':
-          stack.push(sign)
-          sign = 1
-          break
+            stack.push(sign)
+            sign = 1
+            break
         case ')':
-          stack.pop()
-          sign = 1
-          break
-        case '-':
-          sign = -1
-          break
+            stack.pop()
+            sign = 1
+            break
+            case '-':
+            sign = -1
+            break
         case '+':
-          sign = 1
-          break
+            sign = 1
+            break
         default:
-          res += (stack.reduce((acc, v) => acc * v, 1) * sign === 1 ? '+' : '-') + c
-      }
+            let currentSign = sign;
+            for (let i = stack.length - 1; i >= 0; i--) {
+                currentSign *= stack[i];
+            }
+            res += (currentSign === 1 ? '+' : '-') + c;
+            break;
+    }
     }
     return res.replace(/^\+/, '');
 }
