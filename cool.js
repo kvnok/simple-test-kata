@@ -13,7 +13,7 @@ function solve(s) {
             stack.pop()
             sign = 1
             break
-            case '-':
+        case '-':
             sign = -1
             break
         case '+':
@@ -70,3 +70,33 @@ module.exports = solve;
 // More examples in test cases.
 
 // Good luck!
+
+
+function solve2(str) {
+    let result = '';
+    let signStack = [];
+    let currentSign = 1;
+
+    const operations = {
+        '+': () => { currentSign = 1; },
+        '-': () => { currentSign = -1; },
+        '(': () => { signStack.push(currentSign); },
+        ')': () => { signStack.pop(); },
+        default: (char) => {
+            if (signStack.length > 0) {
+                result += (currentSign * signStack[signStack.length - 1] === -1) ? '-' : '+';
+            } else {
+                result += (currentSign === -1) ? '-' : '+';
+            }
+            result += char;
+        }
+    };
+
+    for (let i = 0; i < str.length; i++) {
+        const char = str[i];
+        const operation = operations[char] || operations.default;
+        operation(char);
+    }
+
+    return result;
+}
