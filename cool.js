@@ -3,31 +3,26 @@ function solve(s) {
     let sign = 1
     let res = ''
 
-    for (let c of s) {
-    switch (c) {
-        case '(':
-            stack.push(sign)
-            sign = 1
-            break
-        case ')':
-            stack.pop()
-            sign = 1
-            break
-        case '-':
-            sign = -1
-            break
-        case '+':
-            sign = 1
-            break
-        default:
-            let currentSign = sign;
+    const operations = {
+        '+': () => { sign = 1; },
+        '-': () => { sign = -1; },
+        '(': () => { stack.push(sign); sign = 1},
+        ')': () => { stack.pop(); sign = 1},
+        default: (c) => {
+            let cur_sign = sign;
             for (let i = stack.length - 1; i >= 0; i--) {
-                currentSign *= stack[i];
+                cur_sign *= stack[i];
             }
-            res += (currentSign === 1 ? '+' : '-') + c;
-            break;
+            res += (cur_sign === 1 ? '+' : '-') + c;
+        }
+    };
+
+    for (let i = 0; i < s.length; i++) {
+        const c = s[i];
+        const operation = operations[c] || operations.default;
+        operation(c);
     }
-    }
+
     return res.replace(/^\+/, '');
 }
 
@@ -70,33 +65,3 @@ module.exports = solve;
 // More examples in test cases.
 
 // Good luck!
-
-
-function solve2(str) {
-    let result = '';
-    let signStack = [];
-    let currentSign = 1;
-
-    const operations = {
-        '+': () => { currentSign = 1; },
-        '-': () => { currentSign = -1; },
-        '(': () => { signStack.push(currentSign); },
-        ')': () => { signStack.pop(); },
-        default: (char) => {
-            if (signStack.length > 0) {
-                result += (currentSign * signStack[signStack.length - 1] === -1) ? '-' : '+';
-            } else {
-                result += (currentSign === -1) ? '-' : '+';
-            }
-            result += char;
-        }
-    };
-
-    for (let i = 0; i < str.length; i++) {
-        const char = str[i];
-        const operation = operations[char] || operations.default;
-        operation(char);
-    }
-
-    return result;
-}
